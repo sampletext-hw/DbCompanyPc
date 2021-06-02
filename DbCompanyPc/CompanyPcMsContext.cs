@@ -26,8 +26,8 @@ namespace DbCompanyPc
         {
             modelBuilder.Entity<ComputerToPartElement>().HasKey(cpe => new {cpe.ComputerId, cpe.PartElementId});
             modelBuilder.Entity<ComputerToSoftElement>().HasKey(cse => new {cse.ComputerId, cse.SoftElementId});
-            modelBuilder.Entity<Department>().HasMany<DepartmentRelation>(d => d.ParentOf).WithOne(dr => dr.Department).OnDelete(DeleteBehavior.NoAction);
-            modelBuilder.Entity<Department>().HasMany<DepartmentRelation>(d => d.ChildOf).WithOne(dr => dr.Parent).OnDelete(DeleteBehavior.NoAction);
+            modelBuilder.Entity<Department>().HasMany(d => d.ParentOf).WithOne(dr => dr.Department).OnDelete(DeleteBehavior.NoAction);
+            modelBuilder.Entity<Department>().HasMany(d => d.ChildOf).WithOne(dr => dr.Parent).OnDelete(DeleteBehavior.NoAction);
             base.OnModelCreating(modelBuilder);
         }
 

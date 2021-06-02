@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace DbCompanyPc.Data.Migrations
+namespace DbCompanyPc.Migrations
 {
     public partial class initial : Migration
     {
@@ -18,20 +18,6 @@ namespace DbCompanyPc.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Departments", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "LocalNetworks",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Mask = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_LocalNetworks", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -114,6 +100,27 @@ namespace DbCompanyPc.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "LocalNetworks",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Mask = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DepartmentId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LocalNetworks", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_LocalNetworks_Departments_DepartmentId",
+                        column: x => x.DepartmentId,
+                        principalTable: "Departments",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PartElements",
                 columns: table => new
                 {
@@ -142,32 +149,6 @@ namespace DbCompanyPc.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Computers",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    NetworkId = table.Column<int>(type: "int", nullable: false),
-                    RoomId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Computers", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Computers_LocalNetworks_NetworkId",
-                        column: x => x.NetworkId,
-                        principalTable: "LocalNetworks",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Computers_Rooms_RoomId",
-                        column: x => x.RoomId,
-                        principalTable: "Rooms",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "SoftElements",
                 columns: table => new
                 {
@@ -190,6 +171,32 @@ namespace DbCompanyPc.Data.Migrations
                         name: "FK_SoftElements_Softs_SoftId",
                         column: x => x.SoftId,
                         principalTable: "Softs",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Computers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    NetworkId = table.Column<int>(type: "int", nullable: false),
+                    RoomId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Computers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Computers_LocalNetworks_NetworkId",
+                        column: x => x.NetworkId,
+                        principalTable: "LocalNetworks",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Computers_Rooms_RoomId",
+                        column: x => x.RoomId,
+                        principalTable: "Rooms",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -273,6 +280,11 @@ namespace DbCompanyPc.Data.Migrations
                 column: "ParentId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_LocalNetworks_DepartmentId",
+                table: "LocalNetworks",
+                column: "DepartmentId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PartElements_PartId",
                 table: "PartElements",
                 column: "PartId");
@@ -314,9 +326,6 @@ namespace DbCompanyPc.Data.Migrations
                 name: "SoftElements");
 
             migrationBuilder.DropTable(
-                name: "Departments");
-
-            migrationBuilder.DropTable(
                 name: "Parts");
 
             migrationBuilder.DropTable(
@@ -330,6 +339,9 @@ namespace DbCompanyPc.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Softs");
+
+            migrationBuilder.DropTable(
+                name: "Departments");
         }
     }
 }

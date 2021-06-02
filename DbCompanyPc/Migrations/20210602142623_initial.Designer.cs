@@ -7,10 +7,10 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace DbCompanyPc.Data.Migrations
+namespace DbCompanyPc.Migrations
 {
     [DbContext(typeof(CompanyPcMsContext))]
-    [Migration("20210328200353_initial")]
+    [Migration("20210602142623_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -18,7 +18,7 @@ namespace DbCompanyPc.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.4")
+                .HasAnnotation("ProductVersion", "5.0.6")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("DbCompanyPc.Models.Computer", b =>
@@ -120,10 +120,15 @@ namespace DbCompanyPc.Data.Migrations
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("DepartmentId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Mask")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DepartmentId");
 
                     b.ToTable("LocalNetworks");
                 });
@@ -326,6 +331,17 @@ namespace DbCompanyPc.Data.Migrations
                     b.Navigation("Parent");
                 });
 
+            modelBuilder.Entity("DbCompanyPc.Models.LocalNetwork", b =>
+                {
+                    b.HasOne("DbCompanyPc.Models.Department", "Department")
+                        .WithMany("LocalNetworks")
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Department");
+                });
+
             modelBuilder.Entity("DbCompanyPc.Models.PartElement", b =>
                 {
                     b.HasOne("DbCompanyPc.Models.Part", "Part")
@@ -367,6 +383,8 @@ namespace DbCompanyPc.Data.Migrations
             modelBuilder.Entity("DbCompanyPc.Models.Department", b =>
                 {
                     b.Navigation("ChildOf");
+
+                    b.Navigation("LocalNetworks");
 
                     b.Navigation("ParentOf");
                 });
