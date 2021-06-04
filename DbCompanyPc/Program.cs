@@ -165,6 +165,43 @@ namespace DbCompanyPc
                 context.Computers.Add(new Computer() {NetworkId = 3, RoomId = 2});
             }
 
+            var producer = new Producer() {Title = "Bird Egop Company"};
+            context.Producers.Add(producer);
+
+            context.SaveChanges();
+
+            var part = new Part() {Title = "Видеокарта 1080", PartType = PartType.VideoGraphicsCard, WarrantyReasons = "Нападение инопланетян"};
+
+            context.Parts.Add(part);
+            context.SaveChanges();
+
+            var partElement = new PartElement() {ProducerId = producer.Id, PartId = part.Id, PurchaseDate = DateTime.Now, WarrantyDuration = TimeSpan.FromHours(10)};
+
+            context.PartElements.Add(partElement);
+            context.SaveChanges();
+
+            var soft = new Soft() {Title = "Антивирус Касперского", SoftType = SoftType.Antivirus};
+
+            context.Softs.Add(soft);
+            context.SaveChanges();
+
+            var softElement = new SoftElement() {ProducerId = producer.Id, SoftId = soft.Id, LicenseExpirationDate = DateTime.Now.AddDays(10)};
+
+            context.SoftElements.Add(softElement);
+            context.SaveChanges();
+
+            context.ComputerToSoftElements.Add(new ComputerToSoftElement() {ComputerId = 1, SoftElementId = softElement.Id});
+            context.ComputerToSoftElements.Add(new ComputerToSoftElement() {ComputerId = 2, SoftElementId = softElement.Id});
+            context.ComputerToSoftElements.Add(new ComputerToSoftElement() {ComputerId = 3, SoftElementId = softElement.Id});
+            context.ComputerToSoftElements.Add(new ComputerToSoftElement() {ComputerId = 4, SoftElementId = softElement.Id});
+            context.ComputerToSoftElements.Add(new ComputerToSoftElement() {ComputerId = 5, SoftElementId = softElement.Id});
+            
+            context.ComputerToPartElements.Add(new ComputerToPartElement() {ComputerId = 1, PartElementId = partElement.Id});
+            context.ComputerToPartElements.Add(new ComputerToPartElement() {ComputerId = 2, PartElementId = partElement.Id});
+            context.ComputerToPartElements.Add(new ComputerToPartElement() {ComputerId = 3, PartElementId = partElement.Id});
+            context.ComputerToPartElements.Add(new ComputerToPartElement() {ComputerId = 4, PartElementId = partElement.Id});
+            context.ComputerToPartElements.Add(new ComputerToPartElement() {ComputerId = 5, PartElementId = partElement.Id});
+
             context.SaveChanges();
         }
     }
